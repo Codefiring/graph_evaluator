@@ -1,0 +1,6 @@
+"tst", "operator1", "ggg"
+"ggg", "operator1", "ggg"
+"tst", "operator1", "S5"
+"S5", "operator2", "ggg"
+"ggg", "operator4", "S3"
+
