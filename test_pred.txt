@@ -1,0 +1,3 @@
+X, operator1, Y
+Y, operator2, Z
+Z, operator1, X

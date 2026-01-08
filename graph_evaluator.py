@@ -128,6 +128,7 @@ class GraphEvaluator:
     def find_node_mapping(self, G1: nx.MultiDiGraph, G2: nx.MultiDiGraph) -> Dict[str, str]:
         """
         找到两个图之间的最佳节点映射
+        基于边标签匹配和节点结构特征，完全忽略节点名称差异
         
         Args:
             G1: 第一个图（ground truth）
@@ -136,7 +137,7 @@ class GraphEvaluator:
         Returns:
             从G2节点到G1节点的映射字典
         """
-        logger.info("开始寻找节点映射")
+        logger.info("开始寻找节点映射（忽略节点名称差异）")
         
         nodes1 = list(G1.nodes())
         nodes2 = list(G2.nodes())
@@ -144,21 +145,119 @@ class GraphEvaluator:
         if len(nodes1) != len(nodes2):
             logger.warning(f"节点数量不匹配: G1有{len(nodes1)}个节点, G2有{len(nodes2)}个节点")
         
-        # 计算每个节点的特征签名
-        signatures1 = {node: self.get_node_signature(G1, node) for node in nodes1}
-        signatures2 = {node: self.get_node_signature(G2, node) for node in nodes2}
+        # 第一步：基于边的匹配来推断节点映射
+        # 构建边集合（边标签 -> (源节点, 目标节点)的映射）
+        edges_by_label1 = defaultdict(list)
+        edges_by_label2 = defaultdict(list)
         
-        # 基于特征匹配节点
-        mapping = {}
+        for u, v, data in G1.edges(data=True):
+            label = data.get('label', '')
+            edges_by_label1[label].append((u, v))
+        
+        for u, v, data in G2.edges(data=True):
+            label = data.get('label', '')
+            edges_by_label2[label].append((u, v))
+        
+        # 初始化映射
+        mapping = {}  # G2节点 -> G1节点
+        reverse_mapping = {}  # G1节点 -> G2节点（用于验证一致性）
         used_nodes1 = set()
         
-        # 首先匹配特征完全相同的节点
-        for node2 in nodes2:
+        # 第二步：通过匹配的边来推断节点映射
+        # 对于每个边标签，尝试匹配具有相同标签的边
+        for label in set(edges_by_label1.keys()) & set(edges_by_label2.keys()):
+            edges1 = edges_by_label1[label]
+            edges2 = edges_by_label2[label]
+            
+            # 对于每条G2的边，找到最匹配的G1的边
+            for u2, v2 in edges2:
+                if u2 in mapping and v2 in mapping:
+                    continue  # 已经映射过了
+                
+                best_match = None
+                best_score = -1
+                
+                for u1, v1 in edges1:
+                    # 检查是否已经被其他节点使用
+                    if u1 in used_nodes1 or v1 in used_nodes1:
+                        continue
+                    
+                    # 计算匹配分数
+                    score = 0
+                    
+                    # 如果源节点或目标节点已经映射，检查一致性
+                    if u2 in mapping:
+                        if mapping[u2] == u1:
+                            score += 10  # 强匹配
+                        else:
+                            continue  # 不一致，跳过
+                    if v2 in mapping:
+                        if mapping[v2] == v1:
+                            score += 10  # 强匹配
+                        else:
+                            continue  # 不一致，跳过
+                    
+                    # 基于节点结构特征
+                    sig_u1 = self.get_node_signature(G1, u1)
+                    sig_u2 = self.get_node_signature(G2, u2)
+                    sig_v1 = self.get_node_signature(G1, v1)
+                    sig_v2 = self.get_node_signature(G2, v2)
+                    
+                    # 源节点匹配分数
+                    if sig_u1['in_degree'] == sig_u2['in_degree']:
+                        score += 1
+                    if sig_u1['out_degree'] == sig_u2['out_degree']:
+                        score += 1
+                    if sig_u1['in_labels'] == sig_u2['in_labels']:
+                        score += 2
+                    if sig_u1['out_labels'] == sig_u2['out_labels']:
+                        score += 2
+                    
+                    # 目标节点匹配分数
+                    if sig_v1['in_degree'] == sig_v2['in_degree']:
+                        score += 1
+                    if sig_v1['out_degree'] == sig_v2['out_degree']:
+                        score += 1
+                    if sig_v1['in_labels'] == sig_v2['in_labels']:
+                        score += 2
+                    if sig_v1['out_labels'] == sig_v2['out_labels']:
+                        score += 2
+                    
+                    if score > best_score:
+                        best_score = score
+                        best_match = (u1, v1)
+                
+                if best_match and best_score > 0:
+                    u1, v1 = best_match
+                    # 添加映射
+                    if u2 not in mapping and u1 not in used_nodes1:
+                        mapping[u2] = u1
+                        reverse_mapping[u1] = u2
+                        used_nodes1.add(u1)
+                        logger.debug(f"通过边匹配映射节点: {u2} -> {u1} (分数: {best_score})")
+                    if v2 not in mapping and v1 not in used_nodes1:
+                        mapping[v2] = v1
+                        reverse_mapping[v1] = v2
+                        used_nodes1.add(v1)
+                        logger.debug(f"通过边匹配映射节点: {v2} -> {v1} (分数: {best_score})")
+        
+        # 第三步：对于未映射的节点，基于结构特征匹配
+        unmatched_nodes2 = [n for n in nodes2 if n not in mapping]
+        unmatched_nodes1 = [n for n in nodes1 if n not in used_nodes1]
+        
+        logger.info(f"通过边匹配映射了 {len(mapping)} 个节点，剩余 {len(unmatched_nodes2)} 个节点需要基于结构匹配")
+        
+        # 计算未匹配节点的特征
+        signatures1 = {node: self.get_node_signature(G1, node) for node in unmatched_nodes1}
+        signatures2 = {node: self.get_node_signature(G2, node) for node in unmatched_nodes2}
+        
+        # 基于特征匹配剩余节点
+        for node2 in unmatched_nodes2:
             sig2 = signatures2[node2]
             best_match = None
             best_score = -1
             
-            for node1 in nodes1:
+            for node1 in unmatched_nodes1:
                 if node1 in used_nodes1:
                     continue
                 
@@ -179,21 +278,21 @@ class GraphEvaluator:
                     best_score = score
                     best_match = node1
             
-            if best_match:
+            if best_match and best_score > 0:
                 mapping[node2] = best_match
                 used_nodes1.add(best_match)
-                logger.debug(f"映射节点: {node2} -> {best_match} (分数: {best_score})")
+                logger.debug(f"通过结构特征映射节点: {node2} -> {best_match} (分数: {best_score})")
         
-        # 处理未匹配的节点
-        unmatched_nodes2 = [n for n in nodes2 if n not in mapping]
-        unmatched_nodes1 = [n for n in nodes1 if n not in used_nodes1]
+        # 第四步：处理仍然未匹配的节点（按顺序分配）
+        remaining_unmatched2 = [n for n in nodes2 if n not in mapping]
+        remaining_unmatched1 = [n for n in nodes1 if n not in used_nodes1]
         
-        for i, node2 in enumerate(unmatched_nodes2):
-            if i < len(unmatched_nodes1):
-                mapping[node2] = unmatched_nodes1[i]
-                logger.debug(f"映射未匹配节点: {node2} -> {unmatched_nodes1[i]}")
+        for i, node2 in enumerate(remaining_unmatched2):
+            if i < len(remaining_unmatched1):
+                mapping[node2] = remaining_unmatched1[i]
+                logger.debug(f"按顺序映射剩余节点: {node2} -> {remaining_unmatched1[i]}")
         
-        logger.info(f"节点映射完成: {len(mapping)} 个节点被映射")
+        logger.info(f"节点映射完成: {len(mapping)} 个节点被映射（完全忽略节点名称差异）")
         return mapping
     
     def normalize_graph(self, graph: nx.MultiDiGraph, node_mapping: Dict[str, str] = None) -> nx.MultiDiGraph:
