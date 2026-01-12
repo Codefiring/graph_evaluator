@@ -1,0 +1,73 @@
+{
+  "evaluation_settings": {
+    "max_length": 5,
+    "use_sampling": false,
+    "sample_size": 10000,
+    "random_seed": 42
+  },
+  "projects": [
+    {
+      "id": "project_1",
+      "name": "项目1",
+      "enabled": true,
+      "ground_truth_file": "tests/data/ground_truth.txt",
+      "prediction_file": "tests/data/prediction.txt"
+    },
+    {
+      "id": "project_2",
+      "name": "项目2",
+      "enabled": true,
+      "ground_truth_file": "tests/data/test_case2_ground_truth.txt",
+      "prediction_file": "tests/data/test_case2_prediction.txt"
+    },
+    {
+      "id": "project_3",
+      "name": "项目3",
+      "enabled": false,
+      "ground_truth_file": "tests/data/complex_ground_truth.txt",
+      "prediction_file": "tests/data/complex_prediction.txt"
+    },
+    {
+      "id": "project_4",
+      "name": "项目4",
+      "enabled": false,
+      "ground_truth_file": "path/to/project4/ground_truth.txt",
+      "prediction_file": "path/to/project4/prediction.txt"
+    },
+    {
+      "id": "project_5",
+      "name": "项目5",
+      "enabled": false,
+      "ground_truth_file": "path/to/project5/ground_truth.txt",
+      "prediction_file": "path/to/project5/prediction.txt"
+    },
+    {
+      "id": "project_6",
+      "name": "项目6",
+      "enabled": false,
+      "ground_truth_file": "path/to/project6/ground_truth.txt",
+      "prediction_file": "path/to/project6/prediction.txt"
+    },
+    {
+      "id": "project_7",
+      "name": "项目7",
+      "enabled": false,
+      "ground_truth_file": "path/to/project7/ground_truth.txt",
+      "prediction_file": "path/to/project7/prediction.txt"
+    },
+    {
+      "id": "project_8",
+      "name": "项目8",
+      "enabled": false,
+      "ground_truth_file": "path/to/project8/ground_truth.txt",
+      "prediction_file": "path/to/project8/prediction.txt"
+    }
+  ],
+  "output_settings": {
+    "output_dir": "results",
+    "save_json": true,
+    "save_csv": true,
+    "json_filename": "evaluation_results.json",
+    "csv_filename": "evaluation_results.csv"
+  }
+}

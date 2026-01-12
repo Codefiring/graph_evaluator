@@ -1,3 +1,0 @@
-S1, operator1, S2
-S2, operator2, S3
-S3, operator1, S1

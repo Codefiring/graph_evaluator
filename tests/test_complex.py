@@ -2,11 +2,18 @@
 测试复杂用例
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
 from graph_evaluator import GraphEvaluator
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# 获取测试数据目录路径
+DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 def test_complex_case():
     """测试复杂用例: Ground Truth 17条边, Prediction 24条边"""
@@ -14,7 +21,9 @@ def test_complex_case():
     print("复杂测试用例")
     print("="*60)
     evaluator = GraphEvaluator()
-    result = evaluator.evaluate('complex_ground_truth.txt', 'complex_prediction.txt')
+    gt_file = os.path.join(DATA_DIR, 'complex_ground_truth.txt')
+    pred_file = os.path.join(DATA_DIR, 'complex_prediction.txt')
+    result = evaluator.evaluate(gt_file, pred_file)
     
     print("\n" + "="*60)
     print("评估结果摘要:")
@@ -47,4 +56,3 @@ def test_complex_case():
 
 if __name__ == '__main__':
     test_complex_case()
-

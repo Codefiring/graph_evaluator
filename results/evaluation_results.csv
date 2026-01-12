@@ -1,0 +1,3 @@
+﻿project_id,project_name,status,precision,recall,f1,jaccard,num_sequences_gt,num_sequences_pred,num_intersection,num_only_in_pred,num_only_in_gt,gt_num_nodes,gt_num_edges,pred_num_nodes,pred_num_edges,coverage_gt,coverage_pred,gt_avg_seq_length,pred_avg_seq_length,gt_min_seq_length,gt_max_seq_length,pred_min_seq_length,pred_max_seq_length,max_length,use_sampling,evaluation_time,error_message
+project_1,项目1,success,1.0,1.0,1.0,1.0,10,10,10,0,0,4,5,4,5,1.0,1.0,2.9,2.9,0,5,0,5,5,False,2026-01-12T15:27:58.588920,
+project_2,项目2,success,0.7619047619047619,1.0,0.8648648648648648,0.7619047619047619,16,21,16,5,0,4,4,4,5,1.0,0.7619047619047619,2.8125,2.857142857142857,0,5,0,5,5,False,2026-01-12T15:27:58.591009,

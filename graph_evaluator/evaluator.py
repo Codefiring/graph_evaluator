@@ -9,13 +9,18 @@ import networkx as nx
 from typing import Dict, List, Tuple, Set
 from collections import defaultdict
 import itertools
+import os
 
-# 配置日志
+# 配置日志 - 日志文件保存到logs目录
+log_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'logs')
+os.makedirs(log_dir, exist_ok=True)
+log_file = os.path.join(log_dir, 'graph_evaluation.log')
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('graph_evaluation.log', encoding='utf-8'),
+        logging.FileHandler(log_file, encoding='utf-8'),
         logging.StreamHandler()
     ]
 )
@@ -445,19 +450,3 @@ class GraphEvaluator:
             logger.info(f"需要删除的边: {result['edges_to_delete_details']}")
         
         return result
-
-
-def main():
-    """主函数"""
-    evaluator = GraphEvaluator()
-    
-    # 评估
-    result = evaluator.evaluate('ground_truth.txt', 'prediction.txt')
-    
-    print("\n评估完成！详细日志已保存到 graph_evaluation.log")
-    print(f"边相似度: {result['edge_similarity']:.4f}")
-
-
-if __name__ == '__main__':
-    main()
-

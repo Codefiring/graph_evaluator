@@ -16,18 +16,13 @@ parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
-# Virtual Environment
-venv/
-ENV/
-env/
-.venv
+# 日志文件
+logs/*.log
+*.log
 
 # IDE
 .vscode/
@@ -35,34 +30,11 @@ env/
 *.swp
 *.swo
 *~
+
+# 操作系统
 .DS_Store
+Thumbs.db
 
-# Logs
-*.log
-graph_evaluation.log
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.hypothesis/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# Environment variables
-.env
-.env.local
-
-# MyPy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
+# 测试生成的临时文件
+tests/data/test_gt.txt
+tests/data/test_pred.txt

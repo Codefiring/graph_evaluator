@@ -1,0 +1,150 @@
+{
+  "evaluation_time": "2026-01-12T15:27:58.591044",
+  "total_projects": 2,
+  "successful_projects": 2,
+  "failed_projects": 0,
+  "results": [
+    {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "jaccard": 1.0,
+      "num_sequences_gt": 10,
+      "num_sequences_pred": 10,
+      "num_intersection": 10,
+      "num_only_in_pred": 0,
+      "num_only_in_gt": 0,
+      "num_union": 10,
+      "gt_sequence_stats": {
+        "min_length": 0,
+        "max_length": 5,
+        "avg_length": 2.9,
+        "length_distribution": {
+          "3": 2,
+          "2": 2,
+          "5": 2,
+          "1": 1,
+          "4": 2,
+          "0": 1
+        }
+      },
+      "pred_sequence_stats": {
+        "min_length": 0,
+        "max_length": 5,
+        "avg_length": 2.9,
+        "length_distribution": {
+          "3": 2,
+          "2": 2,
+          "5": 2,
+          "1": 1,
+          "4": 2,
+          "0": 1
+        }
+      },
+      "intersection_sequence_stats": {
+        "min_length": 0,
+        "max_length": 5,
+        "avg_length": 2.9,
+        "length_distribution": {
+          "3": 2,
+          "2": 2,
+          "5": 2,
+          "1": 1,
+          "4": 2,
+          "0": 1
+        }
+      },
+      "gt_num_nodes": 4,
+      "gt_num_edges": 5,
+      "pred_num_nodes": 4,
+      "pred_num_edges": 5,
+      "coverage_gt": 1.0,
+      "coverage_pred": 1.0,
+      "max_length": 5,
+      "use_sampling": false,
+      "node_mapping": {
+        "S5": "S5",
+        "ggg": "S2",
+        "tst": "S1",
+        "S3": "S3"
+      },
+      "project_id": "project_1",
+      "project_name": "项目1",
+      "status": "success",
+      "ground_truth_file": "tests/data/ground_truth.txt",
+      "prediction_file": "tests/data/prediction.txt",
+      "evaluation_time": "2026-01-12T15:27:58.588920"
+    },
+    {
+      "precision": 0.7619047619047619,
+      "recall": 1.0,
+      "f1": 0.8648648648648648,
+      "jaccard": 0.7619047619047619,
+      "num_sequences_gt": 16,
+      "num_sequences_pred": 21,
+      "num_intersection": 16,
+      "num_only_in_pred": 5,
+      "num_only_in_gt": 0,
+      "num_union": 21,
+      "gt_sequence_stats": {
+        "min_length": 0,
+        "max_length": 5,
+        "avg_length": 2.8125,
+        "length_distribution": {
+          "4": 3,
+          "1": 3,
+          "5": 3,
+          "2": 3,
+          "3": 3,
+          "0": 1
+        }
+      },
+      "pred_sequence_stats": {
+        "min_length": 0,
+        "max_length": 5,
+        "avg_length": 2.857142857142857,
+        "length_distribution": {
+          "3": 4,
+          "2": 4,
+          "5": 4,
+          "4": 4,
+          "1": 4,
+          "0": 1
+        }
+      },
+      "intersection_sequence_stats": {
+        "min_length": 0,
+        "max_length": 5,
+        "avg_length": 2.8125,
+        "length_distribution": {
+          "4": 3,
+          "1": 3,
+          "5": 3,
+          "2": 3,
+          "3": 3,
+          "0": 1
+        }
+      },
+      "gt_num_nodes": 4,
+      "gt_num_edges": 4,
+      "pred_num_nodes": 4,
+      "pred_num_edges": 5,
+      "coverage_gt": 1.0,
+      "coverage_pred": 0.7619047619047619,
+      "max_length": 5,
+      "use_sampling": false,
+      "node_mapping": {
+        "node2": "B",
+        "node3": "C",
+        "node1": "A",
+        "node4": "D"
+      },
+      "project_id": "project_2",
+      "project_name": "项目2",
+      "status": "success",
+      "ground_truth_file": "tests/data/test_case2_ground_truth.txt",
+      "prediction_file": "tests/data/test_case2_prediction.txt",
+      "evaluation_time": "2026-01-12T15:27:58.591009"
+    }
+  ]
+}

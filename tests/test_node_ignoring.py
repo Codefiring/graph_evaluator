@@ -2,11 +2,18 @@
 测试节点名称差异被完全忽略
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
 from graph_evaluator import GraphEvaluator
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# 获取测试数据目录路径
+DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 
 def test_node_name_ignoring():
     """测试节点名称完全不同的情况"""
@@ -23,14 +30,17 @@ S3, operator1, S1"""
 Y, operator2, Z
 Z, operator1, X"""
     
-    with open('test_gt.txt', 'w', encoding='utf-8') as f:
+    gt_file = os.path.join(DATA_DIR, 'test_gt.txt')
+    pred_file = os.path.join(DATA_DIR, 'test_pred.txt')
+    
+    with open(gt_file, 'w', encoding='utf-8') as f:
         f.write(gt_content)
     
-    with open('test_pred.txt', 'w', encoding='utf-8') as f:
+    with open(pred_file, 'w', encoding='utf-8') as f:
         f.write(pred_content)
     
     evaluator = GraphEvaluator()
-    result = evaluator.evaluate('test_gt.txt', 'test_pred.txt')
+    result = evaluator.evaluate(gt_file, pred_file)
     
     print("\n" + "="*60)
     print("测试结果:")
@@ -51,4 +61,3 @@ Z, operator1, X"""
 
 if __name__ == '__main__':
     test_node_name_ignoring()
-
